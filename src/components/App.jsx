@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Form } from './Form/Form';
 import { ContactList } from './ContactList/ContactList';
 import { SearchContact } from './SearchContact/SearchContact';
@@ -7,14 +7,19 @@ import css from './App.module.css';
 import { nanoid } from 'nanoid';
 
 export const App = () => {
-  const INITIAL_STATE = {
-    contacts: [
-      { name: 'Vasil', number: '+380123456789', id: nanoid() },
-      { name: 'Stepan', number: '+382342348737', id: nanoid() },
-      { name: 'Oleh', number: '+382634174942', id: nanoid() },
-    ],
-    filter: '',
-  };
+  const INITIAL_STATE = useMemo(() => {
+    return {
+      contacts: [
+        { name: 'Vasil', number: '+380123456789', id: nanoid() },
+        { name: 'Stepan', number: '+382342348737', id: nanoid() },
+        { name: 'Oleh', number: '+382634174942', id: nanoid() },
+      ],
+      filter: '',
+    };
+  }, []);
+
+  console.log(INITIAL_STATE);
+
   // state = { ...this.INITIAL_STATE };
   const [contacts, setContacts] = useState([...INITIAL_STATE.contacts]);
   const [filter, setFilter] = useState(INITIAL_STATE.filter);
@@ -51,16 +56,12 @@ export const App = () => {
   // }
 
   useEffect(() => {
-    writeLocalStorage();
-  }, []);
-
-  const writeLocalStorage = () => {
     const stringifiedContacts = localStorage.getItem('contacts');
     const parseContacts =
       JSON.parse(stringifiedContacts) ?? INITIAL_STATE.contacts;
 
     setContacts(parseContacts);
-  };
+  }, [INITIAL_STATE.contacts]);
 
   useEffect(() => {
     const stringifiedContacts = JSON.stringify(contacts);

@@ -51,12 +51,16 @@ export const App = () => {
   // }
 
   useEffect(() => {
+    writeLocalStorage();
+  }, []);
+
+  const writeLocalStorage = () => {
     const stringifiedContacts = localStorage.getItem('contacts');
     const parseContacts =
       JSON.parse(stringifiedContacts) ?? INITIAL_STATE.contacts;
 
     setContacts(parseContacts);
-  }, []);
+  };
 
   useEffect(() => {
     const stringifiedContacts = JSON.stringify(contacts);
